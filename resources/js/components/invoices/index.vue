@@ -14,7 +14,7 @@
 
     const getInvoices = async () => {
         let response = await axios.get("api/get_all_invoice")
-        // console.log(response)
+        console.log('', response)
         invoices.value = response.data.invoices
     }
 
