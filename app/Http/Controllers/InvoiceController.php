@@ -60,14 +60,14 @@ class InvoiceController extends Controller
                 'unit_price' => 0,
                 'quantity' => 1
             ]
-            ];
-            return response()->json(
-                $formData
-            );
+        ];
+        return response()->json(
+            $formData
+        );
     }
 
-
     public function add_invoice(Request $request) {
+
         $invoiceitem = $request->input("invoice_item");
 
         $invoicedata['sub_total'] = $request->input('subtotal');
@@ -89,7 +89,56 @@ class InvoiceController extends Controller
             $itemdata['quantity'] = $item->quantity;
             $itemdata['unit_price'] = $item->unit_price;
 
+
             InvoiceItem::create($itemdata);
         }
+        
+    }
+
+    public function getDetailinvoice($id) {
+        $invioce = Invoice::with(['customer','invoice_items.product'])->find($id);
+        return response()->json([
+            'invoice' => $invioce
+        ],200);
+    }
+
+    public function editInvoice($id) {
+        $invioce = Invoice::with(['customer','invoice_items.product'])->find($id);
+        return response()->json([
+            'invoice' => $invioce
+        ],200);
+    }
+    public function updateInvoiceItems(Request $request, $id) {
+
+        $invoice = Invoice::where('id', $id)->first();
+
+        $invoice->sub_total = $request->subtotal;
+        $invoice->total = $request->total;
+        $invoice->customer_id = $request->customer_id;
+        $invoice->number = $request->number;
+        $invoice->date = $request->date;
+        $invoice->due_date = $request->due_date;
+        $invoice->discount = $request->discount;
+        $invoice->reference = $request->reference;
+        $invoice->terms_and_conditions = $request->terms_and_conditions;
+
+        $invoice->update($request->all());
+
+        $invoice_item = $request->input("invoice_item");
+
+        foreach(json_decode($invoice_item) as $item) {
+            $itemdata['product_id'] = $item->product_id;
+            $itemdata['invoice_id'] = $invoice->id;
+            $itemdata['quantity'] = $item->quantity;
+            $itemdata['unit_price'] = $item->unit_price;
+
+
+            InvoiceItem::create($itemdata);
+        }
+        
+    }
+    public function deteleInvoiceItems($id) {
+        $invioceitem = InvoiceItem::findOrFail($id);
+        $invioceitem->delete();
     }
 }

@@ -27,3 +27,7 @@ Route::get('/create_invoice', [InvoiceController::class, 'create_invoice']);
 Route::get('/customers', [CustomerController::class, 'get_all_customer']);
 Route::get('/products', [ProductController::class, 'all_products']);
 Route::post('/add-invoice', [InvoiceController::class, 'add_invoice']);
+Route::get('/show_invoice/{id}', [InvoiceController::class, 'getDetailinvoice']);
+Route::get('/edit_invoice/{id}', [InvoiceController::class, 'editInvoice']);
+Route::get('/detele_invoice/{id}', [InvoiceController::class, 'deteleInvoiceItems']);
+Route::get('/update_invoice/{id}', [InvoiceController::class, 'updateInvoiceItems']);

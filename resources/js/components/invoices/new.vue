@@ -135,6 +135,10 @@
 <script setup>
     import axios from "axios";
     import { onMounted, ref } from "vue"
+    import {useRouter} from 'vue-router'
+
+
+    const router = useRouter()
 
     let form = ref([]);
     let allcustomers = ref([]);
@@ -160,6 +164,8 @@
         let response = await axios.get('/api/customers')
         allcustomers.value = response.data.customers
     }
+
+    
 
     const addCart = (item) => {
         const itemcart = {
@@ -205,8 +211,7 @@
     }
 
     const onSave = () => {
-        console.log('ạdhgashdaghsdagsdhg');
-        console.log(listCart.value.length);
+        
         if(listCart.value.length >= 1) {
 
             let subtotal = 0;
@@ -217,7 +222,7 @@
 
             const form_data = new FormData();
             form_data.append('invoice_item', JSON.stringify(listCart.value))
-            form_data.append('customer_id', customer_id.value)
+            form_data.append('customer_id', form.value.customer_id)
             form_data.append('date', form.value.date)
             form_data.append('due_date', form.value.due_date)
             form_data.append('number', form.value.number)
@@ -227,7 +232,7 @@
             form_data.append('total', total)
             form_data.append('terms_and_conditions', form.value.terms_and_conditions)
 
-            axios.post("/api/add-invoice", form_data)
+            axios.post("/api/update_invoice/", form_data)
 
             console.log(form_data.value);
             listCart.value = []

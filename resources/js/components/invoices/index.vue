@@ -12,6 +12,10 @@
         getInvoices()
     })
 
+    const onShow = (id) => {
+        router.push('/invoice/show/' + id)
+    }
+
     const getInvoices = async () => {
         let response = await axios.get("api/get_all_invoice")
         console.log('', response)
@@ -89,7 +93,7 @@
 
             <!-- item 1 -->
             <div class="table--items"  v-for="item in invoices" :key="item.id" v-if="invoices.length > 0">
-                <a href="#" class="table--items--transactionId">#093654</a>
+                <a href="#" class="table--items--transactionId" @click="onShow(item.id)">#{{ item.id }}</a>
                 <p>{{ item.date}}</p>
                 <p>{{ item.number}}</p>
                 <p v-if="item.customer">

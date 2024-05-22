@@ -11,7 +11,6 @@ class Invoice extends Model
 
 
     protected $fillable = [
-            'invoice_item', 
             'customer_id', 
             'date', 
             'due_date', 
@@ -19,6 +18,7 @@ class Invoice extends Model
             'reference', 
             'discount', 
             'total', 
+            'sub_total',
             'terms_and_conditions',
     ];
 
@@ -27,4 +27,9 @@ class Invoice extends Model
     public function customer()  {
         return $this->belongsTo(Customer::class);
     }
+    public function invoice_items()  {
+        return $this->hasMany(InvoiceItem::class);
+    }
+
+
 }
