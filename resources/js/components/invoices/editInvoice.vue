@@ -97,7 +97,7 @@
                     
                 </div>
                 <div>
-                    <a class="btn btn-secondary">
+                    <a class="btn btn-secondary" @click="onEdit(form.id)">
                         Save
                     </a>
                 </div>
@@ -127,7 +127,7 @@
                 <button class="btn btn-light mr-2 btn__close--modal" @click="closeModal()">
                     Cancel
                 </button>
-                <button class="btn btn-light btn__close--modal ">Save</button>
+                <!-- <button class="btn btn-light btn__close--modal " ">Save</button> -->
             </div>
         </div>
     </div>
@@ -139,7 +139,10 @@
 <script setup>
 
     import axios from 'axios';
-import {onMounted, ref} from 'vue';
+    import {onMounted, ref} from 'vue';
+    import {useRouter} from "vue-router";
+
+    let router = useRouter()
 
     let form = ref({id: ''})
 
@@ -148,7 +151,6 @@ import {onMounted, ref} from 'vue';
     const showModal = ref(false);
     const hideModal = ref(true);
     let listProducts = ref([]);
-    let listCart= ref([])
 
     const props = defineProps({
         id:{
@@ -157,14 +159,11 @@ import {onMounted, ref} from 'vue';
         }
     });
 
-    
-
     onMounted( async () => {
         getInvoice()
         getAllCustomers()
         getProducts()
         getProducts()
-        Total()
     })
 
     const subTotal = () => {
@@ -228,7 +227,7 @@ import {onMounted, ref} from 'vue';
     }
 
     const onEdit = (id) => {
-        if(form.value.invoice_items.lenght >= 1) {
+        if(form.value.invoice_items.length>=0) {
             let subtotal = 0;
             subtotal = subTotal();
 
@@ -237,7 +236,8 @@ import {onMounted, ref} from 'vue';
 
             const form_data = new FormData();
             form_data.append('invoice_item', JSON.stringify(form.value.invoice_items))
-            form_data.append('customer_id', customer_id.value)
+
+            form_data.append('customer_id', form.value.customer_id)
             form_data.append('date', form.value.date)
             form_data.append('due_date', form.value.due_date)
             form_data.append('number', form.value.number)
@@ -248,7 +248,6 @@ import {onMounted, ref} from 'vue';
             form_data.append('terms_and_conditions', form.value.terms_and_conditions)
 
             axios.post(`/api/update_invoice/${form.value.id}`, form_data)
-
             form.value.invoice_items = []
 
             router.push('/')

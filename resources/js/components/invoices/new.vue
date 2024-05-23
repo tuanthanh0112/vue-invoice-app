@@ -23,7 +23,7 @@
                     </div>
                     <div>
                         <p class="my-1">Date</p>
-                        <input id="date" placeholder="dd-mm-yyyy" type="date" class="input" v-model="form.date"> <!---->
+                        <input id="date" placeholder="dd-mm-yyyy" type="date"  class="input" v-model="form.date"> <!---->
                         <p class="my-1">Due Date</p>
                         <input id="due_date" type="date" class="input" v-model="form.due_date">
                     </div>
@@ -46,13 +46,13 @@
                     </div>
 
                     <!-- item 1 -->
-                    <div class="table--items2" v-for="(itemcart, i) in listCart" :key="itemcart.id">
-                        <p> #{{ itemcart.item_code }} {{ itemcart.descripction }} </p>
+                    <div class="table--items2" v-for="(itemcart, i) in listCart" :key="itemcart.id" >
+                        <p  > #{{ itemcart.item_code }} {{ itemcart.descripction }} </p>
                         <p>
                             <input type="text" class="input" v-model="itemcart.unit_price">
                         </p>
                         <p>
-                            <input type="text" class="input" v-model="itemcart.quantity">
+                            <input type="number" id="amount" class="input"  v-model="itemcart.quantity">
                         </p>
                         <p v-if="itemcart.quantity">
                             $ {{ (itemcart.quantity) * (itemcart.unit_price) }}
@@ -175,8 +175,8 @@
             unit_price: item.unit_price,
             quantity: item.quantity
         }
-        listCart.value.push(itemcart)
 
+        listCart.value.push(itemcart)
         closeModal()
     }
 
@@ -211,18 +211,19 @@
     }
 
     const onSave = () => {
-        
+        console.log(JSON.stringify(listCart.value));
         if(listCart.value.length >= 1) {
-
+            
             let subtotal = 0;
             subtotal = subTotal();
 
             let total = 0;
             total = Total();
 
+            
             const form_data = new FormData();
             form_data.append('invoice_item', JSON.stringify(listCart.value))
-            form_data.append('customer_id', form.value.customer_id)
+            form_data.append('customer_id', customer_id.value)
             form_data.append('date', form.value.date)
             form_data.append('due_date', form.value.due_date)
             form_data.append('number', form.value.number)
@@ -231,11 +232,11 @@
             form_data.append('subtotal', subtotal)
             form_data.append('total', total)
             form_data.append('terms_and_conditions', form.value.terms_and_conditions)
+            
+            axios.post("/api/add-invoice", form_data)
 
-            axios.post("/api/update_invoice/", form_data)
-
-            console.log(form_data.value);
             listCart.value = []
+
 
             router.push('/')
         }

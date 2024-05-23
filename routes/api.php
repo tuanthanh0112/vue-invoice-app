@@ -30,4 +30,5 @@ Route::post('/add-invoice', [InvoiceController::class, 'add_invoice']);
 Route::get('/show_invoice/{id}', [InvoiceController::class, 'getDetailinvoice']);
 Route::get('/edit_invoice/{id}', [InvoiceController::class, 'editInvoice']);
 Route::get('/detele_invoice/{id}', [InvoiceController::class, 'deteleInvoiceItems']);
-Route::get('/update_invoice/{id}', [InvoiceController::class, 'updateInvoiceItems']);
+Route::post('/update_invoice/{id}', [InvoiceController::class, 'updateInvoiceItems']);
+Route::get('/delete_invoice/{id}', [InvoiceController::class, 'deleteInvoice']);

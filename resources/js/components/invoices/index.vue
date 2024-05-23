@@ -32,6 +32,14 @@
         let form = await axios.get("api/create_invoice")
         router.push('/invoice/new')
     }
+    const deleteInvoice = (id) => {
+        console.log('aksdhkasjdjaksd');
+        axios.get('/api/delete_invoice/' + id)
+        router.push('/')
+    }
+    const editInvoice = (id) => {
+        router.push('/invoice/edit/' + id)
+    }
 </script>
 
 <template>
@@ -83,16 +91,19 @@
             </div>
 
             <div class="table--heading">
+                <p>Stt</p>
                 <p>ID</p>
                 <p>Date</p>
                 <p>Number</p>
                 <p>Customer</p>
                 <p>Due Date</p>
                 <p>Total</p>
+                <p>Action</p>
             </div>
 
             <!-- item 1 -->
-            <div class="table--items"  v-for="item in invoices" :key="item.id" v-if="invoices.length > 0">
+            <div class="table--items"  v-for="(item, i ) in invoices" :key="item.id" v-if="invoices.length > 0">
+                <p>{{ i+1 }}</p>
                 <a href="#" class="table--items--transactionId" @click="onShow(item.id)">#{{ item.id }}</a>
                 <p>{{ item.date}}</p>
                 <p>{{ item.number}}</p>
@@ -102,6 +113,7 @@
                 <p v-else></p>
                 <p>{{ item.due_date }}</p>
                 <p> $ {{ item.total}}</p>
+                <p><a href="" style="text-decoration: none;  border: 1px solid ; background-color: rgb(#e0e0e0, #e0e0e0, #e0e0e0); border-radius: 5px; padding: 5px;" @click="deleteInvoice(item.id)">delete</a> <a href="" style="border: 1px solid ; background-color: rgb(red, green, blue); border-radius: 5px; padding: 5px; text-decoration: none;" @click="editInvoice(item.id)">edit</a></p>
             </div>
             <div class="table--items" v-else>
                 <p>Invoice not found</p>

@@ -36,7 +36,7 @@
                         </li>
                         <li>
                             <!-- Select Btn Option -->
-                            <button class="selectBtnFlat ">
+                            <button class="selectBtnFlat " @click="deleteInvoice(form.id)">
                                 <i class=" fas fa-pencil-alt"></i>
                                 Delete
                             </button>
@@ -165,6 +165,12 @@
     const printInvoice = () => {
         window.print();
         router.push('/').catch(() => {})
+    }
+
+    const deleteInvoice = (id) => {
+        console.log('aksdhkasjdjaksd');
+        axios.get('/api/delete_invoice/' + id)
+        router.push('/')
     }
 
     const editInvoice = (id) => {

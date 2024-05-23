@@ -7,6 +7,9 @@ use App\Models\Counter;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+use function Laravel\Prompts\alert;
 
 class InvoiceController extends Controller
 {
@@ -68,6 +71,17 @@ class InvoiceController extends Controller
 
     public function add_invoice(Request $request) {
 
+        $validator =Validator::make(
+            $request->all(),[
+                'date' => 'required',
+                'number' => 'required'
+            ]
+        ) ;
+
+        if($validator->fails()) {
+            return  response()->json(['error' => $validator->errors()], 404);
+        }
+
         $invoiceitem = $request->input("invoice_item");
 
         $invoicedata['sub_total'] = $request->input('subtotal');
@@ -126,6 +140,8 @@ class InvoiceController extends Controller
 
         $invoice_item = $request->input("invoice_item");
 
+        $invoice->invoice_items()->delete();
+
         foreach(json_decode($invoice_item) as $item) {
             $itemdata['product_id'] = $item->product_id;
             $itemdata['invoice_id'] = $invoice->id;
@@ -140,5 +156,11 @@ class InvoiceController extends Controller
     public function deteleInvoiceItems($id) {
         $invioceitem = InvoiceItem::findOrFail($id);
         $invioceitem->delete();
+    }
+
+    public function deleteInvoice($id) {
+        $invioce = Invoice::findOrFail($id);
+        $invioce->invoice_items()->delete();
+        $invioce->delete();
     }
 }
